@@ -1,0 +1,3 @@
+lint-staged.config.js
+.eslintrc.js
+craco.config.js
