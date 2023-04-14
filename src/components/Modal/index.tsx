@@ -1,26 +1,30 @@
-import { FC, useState, ChangeEvent, Dispatch, SetStateAction, useEffect } from 'react';
+import { FC, useState, ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { createPortal } from 'react-dom';
 import { format } from 'date-fns';
 import classNames from 'classnames';
 import Button from '@mui/material/Button';
 
-import type { TEvent, TEvents } from '../Day';
+import type { TEvent /* TEvents */ } from '../Day';
 import styles from './index.scss';
 
 const cn = classNames.bind(styles);
 
+type TEvents = {
+  [date: string]: TEvent[];
+};
+
 type TModal = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  events: TEvents;
+  events: TEvent[];
   setEvents: Dispatch<SetStateAction<TEvents>>;
   currDay: Date;
 };
 
-const Modal: FC<TModal> = ({ isOpen, setIsOpen, setEvents, currDay, events }) => {
-  const [description, setDescription] = useState(events[format(currDay, 'yyyy-MM-dd')]?.description || '');
-  const [startDate, setStartDate] = useState(events[format(currDay, 'yyyy-MM-dd')]?.startTime || '');
-  const [endDate, setEndDate] = useState(events[format(currDay, 'yyyy-MM-dd')]?.endTime || '');
+const Modal: FC<TModal> = ({ isOpen, setIsOpen, setEvents, currDay /* events */ }) => {
+  const [description, setDescription] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const handleChangeStartDate = (e: ChangeEvent<HTMLInputElement>) => {
     setStartDate(e.target.value);
@@ -32,19 +36,28 @@ const Modal: FC<TModal> = ({ isOpen, setIsOpen, setEvents, currDay, events }) =>
 
   const handleClick = (day: number | Date): void => {
     const formattedDate = format(day, 'yyyy-MM-dd');
-    const obj: TEvent = {
+    const objEvent: TEvent = {
       description: `${description}`,
       startTime: `${startDate}`,
       endTime: `${endDate}`,
     };
 
-    setEvents((prevEvents) => ({
+    setEvents((prevEvents: TEvents): TEvents => {
+      console.log(prevEvents, 'prevEvents');
+      const eventsOnCurrentDay: TEvent[] = prevEvents[formattedDate] || [];
+      const updatedEventsOnCurrentDay: TEvent[] = [...eventsOnCurrentDay, objEvent];
+      const updatedEvents: TEvents = {
+        ...prevEvents,
+        [formattedDate]: updatedEventsOnCurrentDay,
+      };
+      return updatedEvents;
+    });
+
+    /* setEvents((prevEvents) => ({
       ...prevEvents,
       [formattedDate]: obj,
-    }));
+    })); */
   };
-
-  useEffect(() => localStorage.setItem('data', JSON.stringify(events)), [events]);
 
   return createPortal(
     <div

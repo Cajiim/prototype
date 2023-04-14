@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, Dispatch, SetStateAction } from 'react';
 import { format, isSameDay } from 'date-fns';
 import classNames from 'classnames';
 import Button from '@mui/material/Button';
@@ -15,21 +15,32 @@ export type TEvent = {
 };
 
 export type TEvents = {
-  [date: string]: TEvent;
+  [date: string]: TEvent[];
 };
 
 type TDay = {
   item: Date;
   selectedDate: Date;
+  events: TEvent[];
+  setEvents: Dispatch<SetStateAction<TEvents>>;
 };
 
-const Day: FC<TDay> = ({ item, selectedDate }) => {
-  const localData = JSON.parse(localStorage.data);
+const Day: FC<TDay> = ({ item, selectedDate, events, setEvents }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [events, setEvents] = useState<TEvents>(localData || {});
   const handlButtonAdd = () => setIsOpen(true);
   const date = new Date();
 
+  /* const formatedCurrDay = format(item, 'yyyy-MM-dd'); */
+
+  /* const handlButtonDelete = () => {
+    setEvents(
+      (prevEvents): TEvents => ({
+        ...prevEvents,
+        [formatedCurrDay]: null,
+      })
+    );
+  }; */
+  /* console.log(events, 'events'); */
   return (
     <>
       <li
@@ -42,25 +53,28 @@ const Day: FC<TDay> = ({ item, selectedDate }) => {
       >
         <div className="">{format(item, 'dd')}</div>
         <div className="day__events">
-          <span className="day__description">
-            {events[format(item, 'yyyy-MM-dd')]?.description || ''}
-          </span>
-          <span className="day__startTime">
-            {events[format(item, 'yyyy-MM-dd')] &&
-              `Начало: ${events[format(item, 'yyyy-MM-dd')].startTime}`}
-          </span>
-          <span className="day__endTime">
-            {events[format(item, 'yyyy-MM-dd')] &&
-              `Конец: ${events[format(item, 'yyyy-MM-dd')].endTime}`}
-          </span>
+          <span className="day__description">{events?.description || ''}</span>
+          <span className="day__startTime">{events && `Начало: ${events!.startTime}`}</span>
+          <span className="day__endTime">{events && `Конец: ${events!.endTime}`}</span>
         </div>
+        {events && (
+          <Button
+            className="day__deleteButton"
+            size="small"
+            color="error"
+            /* onClick={() => handlButtonDelete()} */
+            style={{ fontSize: '8px', position: 'absolute', padding: '0' }}
+          >
+            Удалить
+          </Button>
+        )}
         <Button
           className="day__addButton"
           size="small"
           onClick={handlButtonAdd}
-          style={{ fontSize: '8px', position: 'absolute' }}
+          style={{ fontSize: '8px', position: 'absolute', padding: '0' }}
         >
-          {events[format(item, 'yyyy-MM-dd')] ? 'Изменить' : 'Добавить'}
+          {events ? 'Изменить' : 'Добавить'}
         </Button>
       </li>
       <Modal
