@@ -3,12 +3,12 @@ import { format, subMonths, add } from 'date-fns';
 import Button from '@mui/material/Button';
 import './index.scss';
 
-type THeader = {
+type THeader = FC<{
   selectedDate: Date;
   setSelectedDate: Dispatch<SetStateAction<Date>>;
-};
+}>;
 
-const Header: FC<THeader> = ({ selectedDate, setSelectedDate }) => (
+const Header: THeader = ({ selectedDate, setSelectedDate }) => (
   <div className="header">
     <Button color="info" onClick={() => setSelectedDate(subMonths(selectedDate, 1))}>
       {'<'}

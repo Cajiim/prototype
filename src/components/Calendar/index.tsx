@@ -8,7 +8,7 @@ import './index.scss';
 
 const Calendar: FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  
+
   const monthStart = startOfMonth(selectedDate);
   const weekStart = startOfWeek(monthStart, { weekStartsOn: 1 });
 

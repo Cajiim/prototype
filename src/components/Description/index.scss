@@ -1,0 +1,22 @@
+.description {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &__text {
+    display: flex;
+    max-width: calc(100% - 20px);
+    gap: 5px;
+  }
+
+  &__delete {
+    left: 0;
+  }
+
+  &__item {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

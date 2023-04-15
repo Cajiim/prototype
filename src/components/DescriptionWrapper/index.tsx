@@ -1,10 +1,21 @@
-import { FC } from 'react';
+import Description from '../Description';
+import type { TDescriptionWrapper } from './types';
+import './index.scss';
 
-import { Description } from '../Description';
-
-const DescriptionWrapper: FC = () => (
-  <ul className='descriptionWrapper'>
-    <Description/>
+const DescriptionWrapper: TDescriptionWrapper = ({ events, currDate, setEvents }) => (
+  <ul className="descriptionWrapper">
+    {events &&
+      events.map(({ description, startTime, endTime, id }) => (
+        <Description
+          key={id}
+          description={description}
+          startTime={startTime}
+          endTime={endTime}
+          id={id}
+          currDate={currDate}
+          setEvents={setEvents}
+        />
+      ))}
   </ul>
 );
 

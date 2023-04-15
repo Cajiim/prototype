@@ -1,62 +1,42 @@
-import { FC, useState, ChangeEvent, Dispatch, SetStateAction } from 'react';
+import { useState, ChangeEvent } from 'react';
 import { createPortal } from 'react-dom';
-import { format } from 'date-fns';
 import classNames from 'classnames';
 import Button from '@mui/material/Button';
 
-import type { TEvent /* TEvents */ } from '../Day';
+import { handleClickAdd, handleEditClick } from './utils';
+import type { TModal } from './types';
 import styles from './index.scss';
 
 const cn = classNames.bind(styles);
 
-type TEvents = {
-  [date: string]: TEvent[];
-};
-
-type TModal = {
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-  events: TEvent[];
-  setEvents: Dispatch<SetStateAction<TEvents>>;
-  currDay: Date;
-};
-
-const Modal: FC<TModal> = ({ isOpen, setIsOpen, setEvents, currDay /* events */ }) => {
-  const [description, setDescription] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+const Modal: TModal = ({
+  isOpen,
+  setIsOpen,
+  setEvents,
+  currDay,
+  id,
+  initDescription,
+  initStartTime,
+  initEndTime,
+}) => {
+  const [description, setDescription] = useState(initDescription || '');
+  const [startDate, setStartDate] = useState(initStartTime || '');
+  const [endDate, setEndDate] = useState(initEndTime || '');
 
   const handleChangeStartDate = (e: ChangeEvent<HTMLInputElement>) => {
     setStartDate(e.target.value);
   };
-
   const handleChangeEndDate = (e: ChangeEvent<HTMLInputElement>) => {
     setEndDate(e.target.value);
   };
 
-  const handleClick = (day: number | Date): void => {
-    const formattedDate = format(day, 'yyyy-MM-dd');
-    const objEvent: TEvent = {
-      description: `${description}`,
-      startTime: `${startDate}`,
-      endTime: `${endDate}`,
-    };
-
-    setEvents((prevEvents: TEvents): TEvents => {
-      console.log(prevEvents, 'prevEvents');
-      const eventsOnCurrentDay: TEvent[] = prevEvents[formattedDate] || [];
-      const updatedEventsOnCurrentDay: TEvent[] = [...eventsOnCurrentDay, objEvent];
-      const updatedEvents: TEvents = {
-        ...prevEvents,
-        [formattedDate]: updatedEventsOnCurrentDay,
-      };
-      return updatedEvents;
-    });
-
-    /* setEvents((prevEvents) => ({
-      ...prevEvents,
-      [formattedDate]: obj,
-    })); */
+  const handlClick = () => {
+    if (id) {
+      handleEditClick({ currDay, descriptionId: id, description, startDate, endDate, setEvents });
+    } else {
+      handleClickAdd({ currDay, description, startDate, endDate, setEvents });
+      setIsOpen(false);
+    }
   };
 
   return createPortal(
@@ -68,7 +48,7 @@ const Modal: FC<TModal> = ({ isOpen, setIsOpen, setEvents, currDay /* events */ 
       role="presentation"
     >
       <form className="modal__form" onClick={(e) => e.stopPropagation()} role="presentation">
-        <h3>Add Event</h3>
+        <h3>{id ? 'Edit Event' : 'Add Event'}</h3>
         <label className="modal__description" htmlFor="description">
           Description:
           <input
@@ -99,14 +79,8 @@ const Modal: FC<TModal> = ({ isOpen, setIsOpen, setEvents, currDay /* events */ 
             id="endTime"
           />
         </label>
-        <Button
-          variant="contained"
-          onClick={() => {
-            handleClick(currDay);
-            setIsOpen(false);
-          }}
-        >
-          Add
+        <Button variant="contained" onClick={handlClick}>
+          {id ? 'Edit' : 'Add'}
         </Button>
       </form>
     </div>,
