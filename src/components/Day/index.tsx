@@ -37,7 +37,11 @@ const Day: TDay = ({ item, selectedDate, events, setEvents }) => {
             Добавить
           </Button>
         </div>
-        <DescriptionWrapper events={sortByStartTime(events)} setEvents={setEvents} currDate={item} />
+        <DescriptionWrapper
+          events={sortByStartTime(events)}
+          setEvents={setEvents}
+          currDate={item}
+        />
       </li>
       <Modal isOpen={isOpen} setIsOpen={setIsOpen} setEvents={setEvents} currDay={item} />
     </>
