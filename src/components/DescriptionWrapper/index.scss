@@ -2,4 +2,9 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  overflow: auto;
+}
+
+.descriptionWrapper::-webkit-scrollbar {
+  width: 0;
 }

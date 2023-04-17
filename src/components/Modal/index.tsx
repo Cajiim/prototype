@@ -30,13 +30,19 @@ const Modal: TModal = ({
     setEndDate(e.target.value);
   };
 
+  // eslint-disable-next-line consistent-return
   const handlClick = () => {
-    if (id) {
-      handleEditClick({ currDay, descriptionId: id, description, startDate, endDate, setEvents });
-    } else {
-      handleClickAdd({ currDay, description, startDate, endDate, setEvents });
-      setIsOpen(false);
-    }
+    if (description && startDate && endDate) {
+      if (id) {
+        handleEditClick({ currDay, descriptionId: id, description, startDate, endDate, setEvents });
+      } else {
+        handleClickAdd({ currDay, description, startDate, endDate, setEvents });
+        setIsOpen(false);
+        setDescription('');
+        setStartDate('');
+        setEndDate('');
+      }
+    } else return '';
   };
 
   return createPortal(

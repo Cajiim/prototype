@@ -5,9 +5,9 @@ import './index.scss';
 const DescriptionWrapper: TDescriptionWrapper = ({ events, currDate, setEvents }) => (
   <ul className="descriptionWrapper">
     {events &&
-      events.map(({ description, startTime, endTime, id }) => (
+      events.map(({ description, startTime, endTime, id }, index) => (
         <Description
-          key={id}
+          key={id || index}
           description={description}
           startTime={startTime}
           endTime={endTime}

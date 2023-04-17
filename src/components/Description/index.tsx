@@ -36,22 +36,28 @@ const Description: TDescription = ({
     <>
       <li className="description">
         <div className="description__text" onClick={() => setIsOpen(true)} role="presentation">
-          <span className="description__item">{description || ''}</span>
-          <span className="description__item">{startTime && `Начало: ${startTime}`}</span>
-          <span className="description__item">{endTime && `Конец: ${endTime}`}</span>
+          <span title={description} className="description__textDescription">
+            {description || ''}
+          </span>
+          <span className="description__textTime">
+            {startTime && endTime && `${startTime}-${endTime}`}
+          </span>
         </div>
-        <Button
-          className="description__delete"
-          color="error"
-          onClick={() => handleClickDelete(currDate, id)}
-          style={{
-            fontSize: '12px',
-            width: '20px',
-            minWidth: '20px',
-          }}
-        >
-          X
-        </Button>
+        {startTime && endTime && (
+          <Button
+            className="description__delete"
+            color="error"
+            onClick={() => handleClickDelete(currDate, id)}
+            style={{
+              fontSize: '12px',
+              width: '20px',
+              minWidth: '20px',
+              height: '20px',
+            }}
+          >
+            X
+          </Button>
+        )}
       </li>
       <Modal
         isOpen={isOpen}

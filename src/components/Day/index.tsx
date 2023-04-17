@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 
 import DescriptionWrapper from '../DescriptionWrapper';
 import Modal from '../Modal';
+import sortByStartTime from './utils';
 import type { TDay } from './types';
 import styles from './index.scss';
 
@@ -31,12 +32,12 @@ const Day: TDay = ({ item, selectedDate, events, setEvents }) => {
             className="day__addButton"
             size="small"
             onClick={handlButtonAdd}
-            style={{ fontSize: '8px', position: 'relative', padding: '0', margin: '0' }}
+            style={{ fontSize: '9px', position: 'relative', padding: '0', margin: '0' }}
           >
             Добавить
           </Button>
         </div>
-        <DescriptionWrapper events={events} setEvents={setEvents} currDate={item} />
+        <DescriptionWrapper events={sortByStartTime(events)} setEvents={setEvents} currDate={item} />
       </li>
       <Modal isOpen={isOpen} setIsOpen={setIsOpen} setEvents={setEvents} currDay={item} />
     </>
